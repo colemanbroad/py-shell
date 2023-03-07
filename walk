@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+import os
+import time
+from glob import glob
+import sys
+# from types import SimpleNamespace as SN
+
+dirs = [sys.argv[1]]
+files = []
+
+while len(dirs)>0:
+    root = dirs[0]
+    children = glob(root + '/*')
+    ch_files = [x for x in children if os.path.isfile(x)]
+    ch_dirs  = [x for x in children if os.path.isdir(x)]
+
+    for fi in ch_files:
+        dirname = os.path.dirname(fi)
+        basename = os.path.basename(fi)
+        basename = bcolors.OKCYAN + f"{basename}" + bcolors.ENDC
+        m_time = time.strftime("%Y-%m-%d", time.localtime(os.path.getmtime(fi)))
+        m_time = bcolors.OKBLUE + f"{m_time:20s}" + bcolors.ENDC
+        print(f"{m_time}\t{dirname}/{basename}")
+
+    dirs += ch_dirs
+    dirs = dirs[1:] # pop
+
+
